@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <title>My Cool Website</title>
-   </head>
-   <body>
-      <h1>Welcome to my website! ⭐️</h1>
-      <p>How was your day? 🎉</p>
-   </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blob Image Example</title>
+</head>
+<body>
+
+<!-- Assuming you have a JavaScript function that creates a blob object -->
+<script>
+    function displayBlobImage(blob) {
+        // Create a FileReader object
+        var reader = new FileReader();
+
+        // Define a callback function to be executed when the reading is successful
+        reader.onload = function(e) {
+            // Set the source of the image to the data URL
+            document.getElementById('blobImage').src = e.target.result;
+        };
+
+        // Read the blob as a data URL
+        reader.readAsDataURL(blob);
+    }
+
+    // Example usage:
+    // Assuming you have a blob object, you can call the displayBlobImage function
+    // with your blob object as an argument.
+    // For example, if you have a blob named myBlob, you can call:
+    // displayBlobImage(myBlob);
+</script>
+
+<!-- Placeholder image with an ID -->
+<img id="blobImage" alt="Blob Image">
+
+</body>
 </html>
