@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blob Image Example</title>
+    <title>View Images from Azure Blob Storage</title>
 </head>
 <body>
+    <h1>Images from Azure Blob Storage</h1>
 
-<!-- Assuming you have a JavaScript function that creates a blob object -->
-<script>
-    function displayBlobImage(blob) {
-        // Create a FileReader object
-        var reader = new FileReader();
+    <div id="imageContainer"></div>
 
-        // Define a callback function to be executed when the reading is successful
-        reader.onload = function(e) {
-            // Set the source of the image to the data URL
-            document.getElementById('blobImage').src = e.target.result;
-        };
+    <script src="https://azuresdkdocs.blob.core.windows.net/$web/index.js"></script>
+    <script>
+        const accountName = 'sranephoto';
+        const containerName = 'lehladak';
+        const sasToken = 'sp=r&st=2023-12-15T12:57:34Z&se=2023-12-15T20:57:34Z&spr=https&sv=2022-11-02&sr=c&sig=7n6B%2BgCbYRZet1SXHB50HUdBx0S%2FSWbrEI2kkuIqJaE%3D';
 
-        // Read the blob as a data URL
-        reader.readAsDataURL(blob);
-    }
+        const containerClient = new Azure.Storage.Blob.ContainerClient(`https://${accountName}.blob.core.windows.net/${containerName}${sasToken}`);
 
-    // Example usage:
-    // Assuming you have a blob object, you can call the displayBlobImage function
-    // with your blob object as an argument.
-    // For example, if you have a blob named myBlob, you can call:
-    // displayBlobImage(myBlob);
-</script>
+        // Get a list of blobs in the container
+        containerClient.listBlobsFlat().byPage().next().then((response) => {
+            const blobs = response.value;
 
-<!-- Placeholder image with an ID -->
-<img id="blobImage" alt="Blob Image">
+            // Display each blob one by one
+            blobs.forEach((blob) => {
+                // Create a URL for the Blob
+                const blobUrl = containerClient.getBlobClient(blob.name).url;
 
+                // Display the Blob image in an <img> tag
+                const img = document.createElement('img');
+                img.src = blobUrl;
+                document.getElementById('imageContainer').appendChild(img);
+            });
+        }).catch((error) => {
+            console.error('Error fetching blobs:', error);
+        });
+    </script>
 </body>
 </html>
