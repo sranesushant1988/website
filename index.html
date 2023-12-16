@@ -16,8 +16,6 @@
     <h1>View Blob Images</h1>
 
     <div id="imageContainer"></div>
-    <button onclick="showPreviousImage()">Previous</button>
-    <button onclick="showNextImage()">Next</button>
 
     <script>
         // Replace with your Azure Storage Account and Container information
@@ -26,61 +24,27 @@
 
         const blobService = AzureStorage.Blob.createBlobService(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=youraccountkey`);
 
-        let currentImageIndex = 0;
-
-        // Function to fetch a list of blob names from the container
-        function fetchBlobList() {
-            blobService.listBlobsSegmented(containerName, null, (error, result) => {
-                if (error) {
-                    console.error('Error fetching blob list:', error);
-                    return;
-                }
-
-                const blobs = result.entries;
-
-                // Create img elements for each blob
-                const imageContainer = document.getElementById('imageContainer');
-                for (let i = 0; i < blobs.length; i++) {
-                    const blobName = blobs[i].name;
-                    const imageUrl = blobService.getUrl(containerName, blobName);
-
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.alt = 'Blob Image';
-                    img.style.display = 'none'; // Hide all images initially
-                    imageContainer.appendChild(img);
-                }
-
-                // Show the first image
-                showImage(currentImageIndex);
-            });
-        }
-
-        // Function to show a specific image
-        function showImage(index) {
-            const images = document.querySelectorAll('#imageContainer img');
-            if (index >= 0 && index < images.length) {
-                // Hide all images
-                images.forEach(img => img.style.display = 'none');
-                // Show the selected image
-                images[index].style.display = 'block';
+        // Fetch a list of blob names from the container
+        blobService.listBlobsSegmented(containerName, null, (error, result) => {
+            if (error) {
+                console.error('Error fetching blob list:', error);
+                return;
             }
-        }
 
-        // Function to show the next image
-        function showNextImage() {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            showImage(currentImageIndex);
-        }
+            const blobs = result.entries;
 
-        // Function to show the previous image
-        function showPreviousImage() {
-            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            showImage(currentImageIndex);
-        }
+            // Create img elements for each blob
+            const imageContainer = document.getElementById('imageContainer');
+            for (let i = 0; i < blobs.length; i++) {
+                const blobName = blobs[i].name;
+                const imageUrl = blobService.getUrl(containerName, blobName);
 
-        // Fetch the blob list when the page loads
-        fetchBlobList();
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = 'Blob Image';
+                imageContainer.appendChild(img);
+            }
+        });
     </script>
 </body>
 </html>
