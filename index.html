@@ -16,7 +16,7 @@
         const accountName = 'sranephoto';
         const containerName = 'lehladak';
 
-        const blobService = AzureStorage.Blob.createBlobService(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=youraccountkey`);
+        const blobService = AzureStorage.Blob.createBlobService(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=sp=r&st=2023-12-16T08:14:11Z&se=2024-01-01T16:14:11Z&spr=https&sv=2022-11-02&sr=c&sig=UmhSaltUE9tLxRXHeeJpDNIxX1doJCx5cdbXKcLsdlY%3D`);
 
         // Fetch a list of blob names from the container
         blobService.listBlobsSegmented(containerName, null, (error, result) => {
