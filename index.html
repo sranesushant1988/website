@@ -31,6 +31,8 @@
         fetch(apiUrl)
             .then(response => response.text())
             .then(data => {
+                console.log('Fetched blob list:', data);
+
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(data, 'application/xml');
                 const blobs = xmlDoc.getElementsByTagName('Blob');
@@ -39,6 +41,8 @@
                     const blobName = blobs[i].getElementsByTagName('Name')[0].textContent;
                     imageNames.push(blobName);
                 }
+
+                console.log('Image names:', imageNames);
 
                 // Load the first image when the page loads
                 loadNextImage();
@@ -49,11 +53,15 @@
     function loadNextImage() {
         if (currentIndex < imageNames.length) {
             const imageUrl = `${endpoint}/${containerName}/${imageNames[currentIndex]}${sasToken}`;
+            console.log('Loading image:', imageUrl);
+
             const imageElement = document.createElement('img');
             imageElement.src = imageUrl;
             imageElement.style.maxWidth = '100%';
+
             document.getElementById('imageContainer').innerHTML = '';
             document.getElementById('imageContainer').appendChild(imageElement);
+
             currentIndex++;
         } else {
             alert('All images have been displayed.');
